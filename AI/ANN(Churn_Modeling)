@@ -1,0 +1,98 @@
+import numpy as np # Linear algebra
+import pandas as pd # data processing, CSV file Input 
+df=pd.read_csv('Churn_Modelling.csv')
+df
+df.shape
+#Total 10 thoustand data and 14 columns 
+RowNumber CustomerId and Surname are not useful hence Dropped
+df.head()
+df.drop(columns = ['RowNumber','CustomerId','Surname'],inplace=True)
+df.isnull()
+df.info()
+Gender and Geograph are object type we need to convert in numerical form
+# is there any duplicate row
+df.duplicated().sum()
+There are 0 duplicated value
+#Let us check how many customers have left the bank
+df['Exited'].value_counts()
+7963 customers have left the bank
+# Let us check how many customers are form which geography
+df['Geography'].value_counts()
+There are less customers from Spain and more are from France 
+#let us check how many males and how many females are there
+df['Gender'].value_counts()
+#we want to convert Geography and Gender which is an object type convert into integer
+df = pd.get_dummies(df,columns=['Geography','Gender'],drop_first =True)
+df.head()
+Here Geography France is Dropped and male column is Dropped
+#Assign all features to X and Target column as Y
+#Divide the data into train and test
+x = df.drop(columns=['Exited'])
+y = df['Exited'].values
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=0)
+80% data used for Training and 20% used for testing
+x
+y
+x_train.shape
+There are 11 columns are used for Testing and 8000 data points for training
+#Let us make uniform scaling of all features
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+
+x_train_trf = scaler.fit_transform(x_train)
+x_test_trf = scaler.transform(x_test)
+### Artificial Neural Network Model (ANN)
+import tensorflow
+from tensorflow import keras
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+# Now let us Define ANN Model
+model = Sequential()
+#Dense:every neuon in this layer connected to evry previus neuron
+model.add(Dense(3,activation='sigmoid', input_dim=11))
+
+model.add(Dense(1,activation='sigmoid'))
+model.summary()
+#input links are 3 and 11 features are applied, total 11x3
+Let us compile the model
+model.compile(optimizer='Adam', loss='binary_crossentropy')
+#Training the model
+history = model.fit(x_train_trf, y_train, epochs=10)
+Lets check final weights after training
+model.layers[0].get_weights()
+model.layers[1].get_weights()
+#3 weights and 1 bias
+y_log = model.predict(x_test_trf)
+y_log
+#The result produced is in terms of probability, bcz the activation function used is sigmoid
+#If the output < 0.5 the output 0 means customer will leave tha bank
+#If output > 0.5 then 1 means customer will retain the bank
+y_pred = np.where(y_log > 0.5,1,0)
+y_pred
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test, y_pred)
+Let us increase the no. of nodes and layers also
+model = Sequential()
+model.add(Dense(11,activation='relu', input_dim=11))
+model.add(Dense(11,activation='relu', input_dim=11))
+
+model.add(Dense(1,activation='sigmoid'))
+# 11x11+11 bias, 11x11+11 bias, 11x1+1 bias = 276
+model.summary()
+model.compile(optimizer='Adam', loss='binary_crossentropy', metrics=['accuracy'])
+history=model.fit(x_train_trf, y_train, epochs=100, validation_split=0.2)
+y_log = model.predict(x_test_trf)
+y_pred = np.where(y_log>0.5,1,0)
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test, y_pred)
+Now accuracy has been improved compared to earlier one
+history.history
+import matplotlib.pyplot as plt
+
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+
