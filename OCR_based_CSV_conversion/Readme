@@ -1,0 +1,46 @@
+# OCR-Based Image and PDF File Conversion to CSV Format
+
+This project aims to extract tabular data from scanned images and PDF documents, including those containing multilingual text (Marathi, Hindi, English), and convert it into structured CSV format using OCR and computer vision techniques.
+
+## 🚀 Project Overview
+
+Manual extraction of tables from documents is tedious, error-prone, and inefficient—especially with regional languages. This system automates the entire process, combining **OCR**, **OpenCV**, and **language translation** techniques to extract, interpret, and convert table data into a usable CSV format.
+
+## 🛠️ Skills & Technologies Used
+
+- **Python** (Google Colab)
+- **OCR Tools**: Tesseract, EasyOCR
+- **Image Processing**: OpenCV (Table detection, edge detection, binarization)
+- **Enhancement Techniques**: Deblurring, Thresholding, Noise Removal
+- **CSV Conversion**: Extracted structured text data saved as `.csv`
+- **Language Support**: Marathi, Hindi, and English via Google Translate API or language mapping
+- **Research & Documentation**: Case study analysis and LaTeX report generation
+
+## 📂 Folder Structure
+ocr-to-csv/
+├── images/ # Input image samples
+├── pdfs/ # Input PDFs for conversion
+├── outputs/ # CSV output files
+├── notebooks/ # Google Colab notebooks for different stages
+├── utils/ # Preprocessing and helper scripts
+├── README.md
+├── requirements.txt
+└── research_paper.tex # LaTeX source for research paper
+
+
+## 🔍 Features
+
+- Detects table boundaries using OpenCV
+- Supports scanned PDFs and images with noisy or blurred input
+- Extracts data from each cell using OCR
+- Converts multilingual table data (Marathi, Hindi, English) to UTF-8 compliant CSV
+- Includes a LaTeX-formatted research report with case studies
+
+## ⚙️ How to Run
+
+1. Install dependencies:
+!pip install pytesseract opencv-python easyocr pandas
+2. Run the notebook:
+Upload an image or PDF
+Preprocess → Detect Tables → Extract Text → Generate CSV
+3. Output CSV is stored in the outputs/ folder.
